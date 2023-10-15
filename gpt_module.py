@@ -199,7 +199,8 @@ class GPTModule(threading.Thread):
             messages[0]['content']
         for i, post_txt in enumerate(self.post_text):
             if i == 0:
-                messages[0]['content'] += '\nTalking styles: '
+                messages[0]['content'] += '\n\n'
+                # messages[0]['content'] += '\nTalking styles: '
             messages[0]['content'] += (post_txt + ' ')
             # if i == (len(self.post_text) - 1):
             #     messages[0]['content'] += ']'
