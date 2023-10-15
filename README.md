@@ -9,12 +9,18 @@
 ```
 conda create -n openai python=3.9
 conda activate openai
-pip install openai
-pip install transformers
-pip install websockets
-pip install pyinstaller
+pip install openai transformers websockets pyinstaller
 conda install pytorch cpuonly -c pytorch
 ```
+
+### Extra modules for server
+sudo apt update
+sudo apt install git
+
+- anaconda (https://www.anaconda.com/products/individual)
+sudo wget https://repo.anaconda.com/archive/Anaconda3-2023.09-0-Linux-x86_64.sh
+bash [Anaconda*.sh]
+source ~/.bashrc
 
 # Configuration
 - File name = [config.json]
@@ -44,5 +50,5 @@ conda install pytorch cpuonly -c pytorch
         - "pre_text": 질문 앞에 오는 설정 (data type: string list)
         - "post_text": 질문 뒤에 오는 설정 (data type: string list)
 
-# pyinstaller
+# pyinstaller (optional)
 pyinstaller --onefile server.py --copy-metadata transformers --copy-metadata tqdm  --copy-metadata regex --copy-metadata requests --copy-metadata packaging --copy-metadata filelock --copy-metadata tokenizers --copy-metadata numpy --copy-metadata huggingface-hub --copy-metadata safetensors --copy-metadata pyyaml
