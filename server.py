@@ -168,9 +168,11 @@ async def echo(task_queue, websocket, path):
                 # print('no received data')
                 continue
 
-            await websocket.send('질문: ' + message)
+            # await websocket.send('질문: ' + message)
             print(f"Received message from {client_ip}:{client_port}: {message}")
             print(user_ids)
+
+            reset_dialog()
             
             for i in range(num_users):
                 gpt_module_tmp = GPTModule(api_key_path = api_key_paths[i], character_id = user_ids[i], tokenizer = tokenizers[i], keep_dialog = keep_dialog[i], warmed_up_dialog = warmed_up_dialog[i])
@@ -184,28 +186,6 @@ async def echo(task_queue, websocket, path):
             # Enqueue the task for computation
             await task_queue.put((websocket, str(connection_id)))
             
-            # for i in range(num_users):
-            #     gpt_modules[i].join()
-
-            # # for i in range(num_users):
-            #     start_time, end_time, elapsed_time_sec = gpt_modules[i].get_elapsed_time()
-            #     return_val = None
-            #     if json_format:
-            #         json_result = pack_str_to_json(gpt_modules[i].get_answer(), str(user_ids[i]), start_time, end_time, elapsed_time_sec)
-            #         return_val = json.dumps(json_result, ensure_ascii=False)  # Use ensure_ascii=False
-            #     else:
-            #         return_val = str(user_ids[i]) + ": " + gpt_modules[i].get_answer()
-            #         return_val += '\n{}~{}, 소요시간: {} 초'.format(start_time, end_time, elapsed_time_sec)
-
-            #     if return_val is not None:
-            #         await websocket.send(return_val)
-            #     print(f"Sent response to {client_ip}:{client_port}(User:{user_ids[i]}): {return_val}")
-
-            # for i in range(num_users):
-            #     gpt_modules[i] = None
-            # gpt_modules = None
-            # gpt_modules = []
-
     except websockets.exceptions.ConnectionClosedError:
         print("Client disconnected")
     except Exception as ex:
@@ -218,9 +198,6 @@ async def echo(task_queue, websocket, path):
             print('The server has been closed.')
             asyncio.get_event_loop().stop()  # Close the event loop when all clients disconnect
 
-
-
-        
 def clear_terminal():
     os.system('cls' if os.name == 'nt' else 'clear')
 
@@ -242,16 +219,16 @@ async def main():
     if is_token_ok:
         # warm up dialog
         reset_warmed_up_dialog()
-        clear_terminal()
-        for n in range(user_input):
-            print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
-            print('>>>>>>>>>>>>>>>>>>>>>>>>> warming up... please wait for a while >>>>>>>>>>>>>>>>>>>>>>>>>')
-            print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n')
-            warmup_dialog_without_gpt()
-            # warmup_dialog()
-            # clear_terminal()
-        if user_input > 0:
-            print('<<<<<<<<<<<<<<<<<<<<<<<<< warming up process has been done. <<<<<<<<<<<<<<<<<<<<<<<<<')
+        # clear_terminal()
+        # for n in range(user_input):
+        #     print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+        #     print('>>>>>>>>>>>>>>>>>>>>>>>>> warming up... please wait for a while >>>>>>>>>>>>>>>>>>>>>>>>>')
+        #     print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n')
+        #     warmup_dialog_without_gpt()
+        #     # warmup_dialog()
+        #     # clear_terminal()
+        # if user_input > 0:
+        #     print('<<<<<<<<<<<<<<<<<<<<<<<<< warming up process has been done. <<<<<<<<<<<<<<<<<<<<<<<<<')
         # 127.0.0.1:12009
         ip, port = get_ip_port(CONFIG_PATH)
 

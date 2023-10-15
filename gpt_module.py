@@ -16,6 +16,7 @@ class GPTModule(threading.Thread):
     def __init__(self, api_key_path = './config.json', character_id = "default", tokenizer = None, keep_dialog = None, warmed_up_dialog = None, warmup_mode = False) -> None:
         threading.Thread.__init__(self)
 
+        self.model = 'gpt-3.5-turbo-16k'
 
         self.tokenizer = tokenizer
         if self.tokenizer is None:
@@ -171,7 +172,8 @@ class GPTModule(threading.Thread):
         return user_msg + assistant_msg
         
 
-    def chat_completion(self, setting, messages, contents = None, model = 'gpt-3.5-turbo-16k', remove_white_space = True):
+    def chat_completion(self, setting, messages, contents = None, remove_white_space = True):
+        model = self.model 
         # Get the current time
         start_time = datetime.now().time()
         prepare_msg = copy.deepcopy(setting)
@@ -241,7 +243,7 @@ class GPTModule(threading.Thread):
         completion = openai.ChatCompletion.create(
                         model=model,
                         messages = prepare_msg,
-                        temperature=0.8,
+                        temperature=0.3,
                         # max_tokens=256,
                         # top_p=1,
                         # frequency_penalty=0,

@@ -27,7 +27,7 @@ import asyncio
 import websockets
 
 async def connect_to_server():
-    uri = "ws://ec2-54-180-28-87.ap-northeast-2.compute.amazonaws.com:12009"  # Replace with your EC2 instance's Public DNS and WebSocket port
+    uri = "ws://127.0.0.1:12009"  # Replace with your EC2 instance's Public DNS and WebSocket port
 
     async with websockets.connect(uri) as websocket:
         while True:

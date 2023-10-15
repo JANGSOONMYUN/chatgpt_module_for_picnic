@@ -18,9 +18,11 @@ sudo apt update
 sudo apt install git
 
 - anaconda (https://www.anaconda.com/products/individual)
+```
 sudo wget https://repo.anaconda.com/archive/Anaconda3-2023.09-0-Linux-x86_64.sh
 bash [Anaconda*.sh]
 source ~/.bashrc
+```
 
 # Configuration
 - File name = [config.json]
