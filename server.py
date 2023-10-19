@@ -15,8 +15,11 @@ from get_character import get_character, num_character, get_character_ids
 from gpt_module import GPTModule
 from transformers import GPT2Tokenizer
 from handle_contents import load_contents_csv, check_tokents_for_dialog
+from questionnaire import load_question, get_character_set, find_matched_character
 
 NUM_WORKERS = 5
+
+question_data = load_question()
 
 CONFIG_PATH = './config.json'
 CHARACTER_PATH = './character_setting.json'
@@ -65,6 +68,7 @@ def pack_str_to_json(text, id, end_time = '0:0:0', start_time = '0:0:0', elapsed
     json_data = {
         "id": id,
         "text": text,
+        "character": find_matched_character(text, True),
         "time": {
             "start": start_time,
             "end": end_time,
@@ -105,18 +109,29 @@ def handle_received_date(received_data):
     message = ''
     try:
         json_data = json.loads(received_data)
-        if "action" in json_data:
-            if json_data["action"] == "reset":
-                # Do reset dialog
-                reset_dialog()
-        if 'text' in json_data:
-            message = json_data['text']
+        
+        if isinstance(json_data, int) or isinstance(json_data, str):
+            message = str(json_data)
+        else:
+            # dict
+            if "action" in json_data:
+                if json_data["action"] == "reset":
+                    # Do reset dialog
+                    reset_dialog()
+            if 'text' in json_data:
+                message = json_data['text']
         
     except json.JSONDecodeError:    
         # print("Non-JSON received:", received_data)
         message = str(received_data)
     except Exception as e:
-        print(e)
+        print('in handle_received_date(), ', e)
+
+    try:
+        integer_value = int(message)
+        message = get_character_set(question_data, message)
+    except ValueError:
+        pass
 
     # It should be removed after testing
     if 'reset' in message:

@@ -1,0 +1,146 @@
+{
+    "0": {
+        "question": "누군가의 비밀을 알게 되었을 때, 나는",
+        "1": ["나에게 그 비밀을 알려줘서 고맙다.",
+            ["반딧불이, FIREFLY", "친구, FRIEND", "꿈꾸는 사람, DREAMER", "수호자, GUARDIAN"]
+        ],
+        "2": ["무기가 생긴 느낌이다.",
+            ["영웅, HERO", "전설, LEGEND", "마법사, WIZARD", "명인, MASTER"]
+        ],
+        "3": ["금방 잊어버린다.",
+            ["사이보그, CYBORG", "웃는 사람, LAUGHER", "춤추는 사람, DANCER", "노래하는 사람, SIGNER"]
+        ],
+        "4": ["알기 전으로 돌아가고 싶다.",
+            ["이웃, NEIGHBOR", "생각하는 사람, THINKER", "이상가, IDEALIST", "투사, CHAMPION"]
+        ],
+        "5": ["입이 간질간질하다.",
+            ["주인공, PROTAGONIST", "관찰자, OBSERVER", "모험가, ADVENTURER", "귀여운 사람, CUTIE"]
+        ]
+    },
+    "1": {
+        "question": "장난을 치고 싶을 때, 나는",
+        "1": ["일단 저지른다.",
+            ["영웅, HERO", "웃는 사람, LAUGHER", "노래하는 사람, SIGNER", "모험가, ADVENTURER"]
+        ],
+        "2": ["어떻게 하면 더 심하게 칠 수 있을지 생각한다.",
+            ["반딧불이, FIREFLY", "친구, FRIEND", "명인, MASTER", "생각하는 사람, THINKER"]
+        ],
+        "3": ["다른 데서 본 장난을 참조한다.",
+            ["사이보그, CYBORG", "이웃, NEIGHBOR", "꿈꾸는 사람, DREAMER", "이상가, IDEALIST"]
+        ],
+        "4": ["제일 행복하다.",
+            ["마법사, WIZARD", "주인공, PROTAGONIST", "춤추는 사람, DANCER", "귀여운 사람, CUTIE"]
+        ],
+        "5": ["상대방의 성격부터 파악한다.",
+            ["전설, LEGEND", "수호자, GUARDIAN", "관찰자, OBSERVER", "투사, CHAMPION"]
+        ]
+    },
+    "2": {
+        "question": "어떤 상황에서 나는",
+        "1": ["초조하다.",
+            ["주인공, PROTAGONIST", "명인, MASTER", "생각하는 사람, THINKER", "이상가, IDEALIST"]
+        ],
+        "2": ["상관 없다.",
+            ["반딧불이, FIREFLY", "사이보그, CYBORG", "춤추는 사람, DANCER", "꿈꾸는 사람, DREAMER"]
+        ],
+        "3": ["어이 없다.",
+            ["친구, FRIEND", "이웃, NEIGHBOR", "웃는 사람, LAUGHER", "귀여운 사람, CUTIE"]
+        ],
+        "4": ["어떻게든 충전한다.",
+            ["영웅, HERO", "마법사, WIZARD", "수호자, GUARDIAN", "모험가, ADVENTURER"]
+        ],
+        "5": ["왜 없는지 생각한다.",
+            ["전설, LEGEND", "관찰자, OBSERVER", "노래하는 사람, SIGNER", "투사, CHAMPION"]
+        ]
+    },
+    "3": {
+        "question": "이중 한 마리와 같이 살아야 한다면, 나는",
+        "1": ["비둘기",
+            ["마법사, WIZARD", "수호자, GUARDIAN", "노래하는 사람, SIGNER", "이상가, IDEALIST"]
+        ],
+        "2": ["강아지",
+            ["친구, FRIEND", "주인공, PROTAGONIST", "이웃, NEIGHBOR", "꿈꾸는 사람, DREAMER"]
+        ],
+        "3": ["사자",
+            ["영웅, HERO", "전설, LEGEND", "모험가, ADVENTURER", "투사, CHAMPION"]
+        ],
+        "4": ["하루살이",
+            ["반딧불이, FIREFLY", "명인, MASTER", "웃는 사람, LAUGHER", "귀여운 사람, CUTIE"]
+        ],
+        "5": ["여우",
+            ["사이보그, CYBORG", "관찰자, OBSERVER", "춤추는 사람, DANCER", "생각하는 사람, THINKER"]
+        ]
+    },
+    "4": {
+        "question": "집에서 나갈 때, 나는",
+        "1": ["오늘 할 일을 생각한다.",
+            ["영웅, HERO", "명인, MASTER", "노래하는 사람, SIGNER", "모험가, ADVENTURER"]
+        ],
+        "2": ["정신이 하나도 없다.",
+            ["친구, FRIEND", "주인공, PROTAGONIST", "춤추는 사람, DANCER", "투사, CHAMPION"]
+        ],
+        "3": ["잊어버린 게 없는지 확인한다.",
+            ["전설, LEGEND", "사이보그, CYBORG", "수호자, GUARDIAN", "웃는 사람, LAUGHER"]
+        ],
+        "4": ["창밖을 본다.",
+            ["반딧불이, FIREFLY", "관찰자, OBSERVER", "꿈꾸는 사람, DREAMER", "이상가, IDEALIST"]
+        ],
+        "5": ["나가기 싫다.",
+            ["마법사, WIZARD", "이웃, NEIGHBOR", "생각하는 사람, THINKER", "귀여운 사람, CUTIE"]
+        ]
+    },
+    "5": {
+        "question": "내가 가장 갖고 싶은 건",
+        "1": ["지성",
+            ["이상가, IDEALIST", "수호자, GUARDIAN", "명인, MASTER", "생각하는 사람, THINKER"]
+        ],
+        "2": ["재치",
+            ["친구, FRIEND", "관찰자, OBSERVER", "협력자, COLLABORATOR", "사이보그, CYBORG"]
+        ],
+        "3": ["명예",
+            ["영웅, HERO", "전설, LEGEND", "꿈꾸는 사람, DREAMER", "투사, CHAMPION"]
+        ],
+        "4": ["매력",
+            ["마법사, MAGICIAN WIZARD", "주인공, PROTAGONIST", "웃는 사람, LAUGHER", "귀여운 사람, CUTIE"]
+        ],
+        "5": ["용기",
+            ["반딧불이, FIREFLY", "춤추는 사람, DANCER", "노래하는 사람, SIGNER", "모험가, ADVENTURER"]
+        ]
+    },
+    "6": {
+        "question": "나는 상대방의 표정을",
+        "1": ["읽을 줄 안다.",
+            ["영웅, HERO", "마법사, MAGICIAN WIZARD", "생각하는 사람, THINKER", "귀여운 사람, CUTIE"]
+        ],
+        "2": ["읽는데 틀린다.",
+            ["친구, FRIEND", "명인, MASTER", "웃는 사람, LAUGHER", "이상가, IDEALIST"]
+        ],
+        "3": ["재밌게 보는 편이다.",
+            ["주인공, PROTAGONIST", "수호자, GUARDIAN", "관찰자, OBSERVER", "협력자, COLLABORATOR"]
+        ],
+        "4": ["개조하고 싶다.",
+            ["전설, LEGEND", "노래하는 사람, SIGNER", "꿈꾸는 사람, DREAMER", "모험가, ADVENTURER"]
+        ],
+        "5": ["왜 봐야하는지 모르겠다.",
+            ["반딧불이, FIREFLY", "사이보그, CYBORG", "춤추는 사람, DANCER", "투사, CHAMPION"]
+        ]
+    },
+    "7": {
+        "question": "내 생일에는",
+        "1": ["기쁘고 벅차오른다.",
+            ["영웅, HERO", "협력자, COLLABORATOR", "웃는 사람, LAUGHER", "춤추는 사람, DANCER"]
+        ],
+        "2": ["하던 일을 해야 한다.",
+            ["전설, LEGEND", "수호자, GUARDIAN", "모험가, ADVENTURER", "이상가, IDEALIST"]
+        ],
+        "3": ["돈을 써야 한다.",
+            ["마법사, MAGICIAN WIZARD", "친구, FRIEND", "귀여운 사람, CUTIE", "투사, CHAMPION"]
+        ],
+        "4": ["왠지 우울하다.",
+            ["반딧불이, FIREFLY", "주인공, PROTAGONIST", "명인, MASTER", "노래하는 사람, SIGNER"]
+        ],
+        "5": ["잠수를 타야 한다.",
+            ["사이보그, CYBORG", "관찰자, OBSERVER", "꿈꾸는 사람, DREAMER", "생각하는 사람, THINKER"]
+        ]
+    }
+}

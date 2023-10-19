@@ -194,7 +194,7 @@ class GPTModule(threading.Thread):
         for pre_text in self.pre_text:
             pre_texts += (pre_text + ' ')
         if len(self.pre_text) > 0:
-            messages[0]['content'] = pre_texts + '\nquestion: ' + messages[0]['content']
+            messages[0]['content'] = pre_texts + '\n' + messages[0]['content']
         if len(self.post_text) > 0:
             messages[0]['content']
         for i, post_txt in enumerate(self.post_text):
