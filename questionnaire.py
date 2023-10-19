@@ -35,7 +35,12 @@ def get_character_set(json_data, number_str):
     # print(type(number_str))
     result_str = ''
     for i, n_str in enumerate(number_str):
-        if int(n_str) > 5 or int(n_str) < 1:
+        if i >= 8:
+            break
+        try:
+            if int(n_str) > 5 or int(n_str) < 1:
+                n_str = '1'
+        except ValueError:
             n_str = '1'
         question = json_data[str(i)]['question']
         char_list = json_data[str(i)][n_str][1]
