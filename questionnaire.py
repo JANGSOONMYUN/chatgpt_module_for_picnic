@@ -56,19 +56,38 @@ def get_character_set(json_data, number_str):
 
 def find_matched_character(txt_from_gpt, english = True):
     selected = character_list[0]
+    closest_idx = 1000
     for i, c in enumerate(character_list):
         c_kr = c[0]
         c_en = c[1]
+        c_kr_wo_empty = c_kr.replace(' ', '')
+        
+        if f'"{c_kr}' in txt_from_gpt: # ex) "영웅"
+            selected = c
+            break
+        if f'"{c_kr_wo_empty}' in txt_from_gpt: # ex) "영웅"
+            selected = c
+            break
+        if f'"{c_en}' in txt_from_gpt: # ex) "HERO"
+            selected = c
+            break
 
-        if c_kr in txt_from_gpt:
+        index = txt_from_gpt.find(c_kr)
+        if index != -1 and closest_idx > index:
+            closest_idx = index
             selected = c
             continue
-        elif c_kr.replace(' ', '') in txt_from_gpt:
+        index = txt_from_gpt.find(c_kr_wo_empty)
+        if index != -1 and closest_idx > index:
+            closest_idx = index
             selected = c
             continue
-        elif c_en in txt_from_gpt:
+            
+        index = txt_from_gpt.find(c_en)
+        if index != -1 and closest_idx > index:
+            closest_idx = index
             selected = c
-            continue
+
 
     print('find_matched_character:', selected)
     if english:
