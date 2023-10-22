@@ -17,7 +17,7 @@ from transformers import GPT2Tokenizer
 from handle_contents import load_contents_csv, check_tokents_for_dialog
 from questionnaire import load_question, get_character_set, find_matched_character
 
-NUM_WORKERS = 5
+NUM_WORKERS = 10
 
 question_data = load_question()
 
@@ -31,8 +31,8 @@ num_users = len(user_ids)
 tokenizers = []
 api_key_paths = []
 gpt_modules = {}
-keep_dialog = []
-warmed_up_dialog = []
+keep_dialog = {}
+warmed_up_dialog = {}
 
 def check_time():
     # Get the current time
@@ -80,30 +80,45 @@ def pack_str_to_json(text, id, end_time = '0:0:0', start_time = '0:0:0', elapsed
 
 
 
-def reset_dialog():
+def reset_dialog(worker_id = None):
     global keep_dialog
-    keep_dialog = None
-    keep_dialog = []
-    for i in range(num_users):
-        keep_dialog.append([])
-    print('reset() has been done.')
+    if worker_id is None:
+        for k, v in keep_dialog.items():
+            del keep_dialog[k]
+            keep_dialog[k] = []
+        worker_id = 'all'
+    else:
+        if worker_id in keep_dialog:
+            del keep_dialog[worker_id]
+        keep_dialog[worker_id] = []
 
-def reset_warmed_up_dialog():
+    print(f'reset() for worker:{worker_id} has been done.')
+
+def reset_warmed_up_dialog(worker_id = None):
     global warmed_up_dialog
-    warmed_up_dialog = None
-    warmed_up_dialog = []
-    for i in range(num_users):
-        warmed_up_dialog.append([])
-    print('reset() has been done.')
+    if worker_id is None:
+        for k, v in warmed_up_dialog.items():
+            del warmed_up_dialog[k]
+            warmed_up_dialog[k] = []
+        worker_id = 'all'
+    else:
+        if worker_id in warmed_up_dialog:
+            del warmed_up_dialog[worker_id]
+        warmed_up_dialog[worker_id] = []
+
+    print(f'reset_warmed_up_dialog() for worker:{worker_id} has been done.')
 
 
-def warmup_dialog_without_gpt():
-    for i in range(num_users):
-        gpt_module = GPTModule(api_key_path = api_key_paths[i], character_id = user_ids[i], tokenizer = tokenizers[i], keep_dialog = warmed_up_dialog[i], warmup_mode = True)
-        warmed_up_dialog[i] += gpt_module.get_q_and_a_by_character_and_post_text()
-        # print(warmed_up_dialog[i])
-        for d in warmed_up_dialog[i]:
-            print(d)
+def warmup_dialog_without_gpt(worker_id = None):
+    if worker_id is None:
+        for k, v in gpt_module.items():
+            reset_warmed_up_dialog(k)
+            gpt_module = GPTModule(api_key_path = api_key_paths[0], character_id = user_ids[0], tokenizer = tokenizers[0], 
+                                   keep_dialog = warmed_up_dialog[k], warmup_mode = True)
+            warmed_up_dialog[k] += gpt_module.get_q_and_a_by_character_and_post_text()
+            # print(warmed_up_dialog[i])
+        for k, v in warmed_up_dialog.items():
+            print(v)
 
 def handle_received_date(received_data):
     message = ''
@@ -159,7 +174,13 @@ async def worker(task_queue):
         websocket, work_id = await task_queue.get()
         result = await receive_gpt_result(gpt_modules[work_id])
         # gpt_modules[work_id] = None
+
+        # Delete memory
         del gpt_modules[work_id]
+        if work_id in keep_dialog:
+            del keep_dialog[work_id]
+        if work_id in warmed_up_dialog:
+            del warmed_up_dialog[work_id]
 
         await websocket.send(result)
         task_queue.task_done()
@@ -169,9 +190,11 @@ connection_id = 0
 async def echo(task_queue, websocket, path):
     global gpt_modules, connected_clients, connection_id
     connected_clients += 1
+    connection_id += 1
+    connection_id_str = str(connection_id)
 
     client_ip, client_port = websocket.remote_address
-    print(f"New connection from {client_ip}:{client_port}")
+    print(f"New connection from {client_ip}:{client_port}, worker_id: {connection_id_str}")
 
     json_format = True
     
@@ -187,19 +210,21 @@ async def echo(task_queue, websocket, path):
             print(f"Received message from {client_ip}:{client_port}: {message}")
             print(user_ids)
 
-            reset_dialog()
-            
-            for i in range(num_users):
-                gpt_module_tmp = GPTModule(api_key_path = api_key_paths[i], character_id = user_ids[i], tokenizer = tokenizers[i], keep_dialog = keep_dialog[i], warmed_up_dialog = warmed_up_dialog[i])
-                gpt_modules[str(connection_id)] = gpt_module_tmp
+            if connection_id_str not in keep_dialog:
+                keep_dialog[connection_id_str] = []
+            if connection_id_str not in warmed_up_dialog:
+                warmed_up_dialog[connection_id_str] = []
 
-            for i in range(num_users):
-                gpt_modules[str(connection_id)].set_text(message)
-                gpt_modules[str(connection_id)].start()
+            reset_dialog(connection_id_str)
+            
+            gpt_modules[connection_id_str] = GPTModule(api_key_path = api_key_paths[0], character_id = user_ids[0], tokenizer = tokenizers[0], 
+                                                    keep_dialog = keep_dialog[connection_id_str], warmed_up_dialog = warmed_up_dialog[connection_id_str])
+            gpt_modules[connection_id_str].set_text(message)
+            gpt_modules[connection_id_str].start()
 
             # the number of 
             # Enqueue the task for computation
-            await task_queue.put((websocket, str(connection_id)))
+            await task_queue.put((websocket, connection_id_str))
             
     except websockets.exceptions.ConnectionClosedError:
         print("Client disconnected")
@@ -226,7 +251,6 @@ async def main():
     for i in range(num_users):
         tokenizers.append(load_tokenizer('gpt2'))
         api_key_paths.append(CONFIG_PATH)
-        keep_dialog.append([])
 
         # check tokens of contents
         if not check_contents_tokens_by_character(user_ids[i]):
@@ -246,17 +270,6 @@ async def main():
         #     print('<<<<<<<<<<<<<<<<<<<<<<<<< warming up process has been done. <<<<<<<<<<<<<<<<<<<<<<<<<')
         # 127.0.0.1:12009
         ip, port = get_ip_port(CONFIG_PATH)
-
-        # start_server = websockets.serve(echo, ip, port)
-
-        # # Start the worker to process tasks in the background
-        # asyncio.create_task(worker())
-
-        # asyncio.get_event_loop().run_until_complete(start_server)
-        # print('--- The server is ready. ---')
-        # asyncio.get_event_loop().run_forever()
-
-
 
         # Create a Queue to manage tasks
         task_queue = asyncio.Queue()
