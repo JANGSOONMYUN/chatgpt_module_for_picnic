@@ -244,7 +244,7 @@ class GPTModule(threading.Thread):
         completion = openai.ChatCompletion.create(
                         model=model,
                         messages = prepare_msg,
-                        temperature=0.3,
+                        temperature=0.5,
                         # max_tokens=256,
                         # top_p=1,
                         # frequency_penalty=0,

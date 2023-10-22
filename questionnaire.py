@@ -60,6 +60,7 @@ def find_matched_character(txt_from_gpt, english = True):
     for i, c in enumerate(character_list):
         c_kr = c[0]
         c_en = c[1]
+        c_kr = c_kr.replace("'", '"')
         c_kr_wo_empty = c_kr.replace(' ', '')
         
         if f'"{c_kr}' in txt_from_gpt: # ex) "영웅"
