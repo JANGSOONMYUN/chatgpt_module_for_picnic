@@ -72,14 +72,15 @@ def get_character_by_percent(json_data, number_str):
         char_list = json_data[str(i)][n_str][1]
 
         for ci, c in enumerate(char_list):
-            if c in result_dict:
-                result_dict[c] += 1
+            ch = c.split(',')[0]
+            if ch in result_dict:
+                result_dict[ch] += 1
             else:
-                result_dict[c] = 0
+                result_dict[ch] = 1
             tot_num += 1
 
     # 사이보그(50%), 영웅(10%), ...
-    for k, v in result_dict:
+    for k, v in result_dict.items():
         percent = int(v/tot_num*100)
         result_str += (k + f'({percent}%), ')
 
