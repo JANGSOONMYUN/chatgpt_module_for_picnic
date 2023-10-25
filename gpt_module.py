@@ -27,6 +27,8 @@ class GPTModule(threading.Thread):
         self.character_setting = get_character('character_setting.json', character_id)
         
         api_key_name = self.character_setting['api_key_name']
+        # FIXME:organization value should be hidden
+        openai.organization = "org-gaGQVteJIdlGWsTGxCxzutUC"
         openai.api_key = get_api_key(api_key_path, key_name = api_key_name)
 
         self.contents_path = self.character_setting['contents_path']

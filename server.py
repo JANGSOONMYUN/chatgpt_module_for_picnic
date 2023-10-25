@@ -15,7 +15,7 @@ from get_character import get_character, num_character, get_character_ids
 from gpt_module import GPTModule
 from transformers import GPT2Tokenizer
 from handle_contents import load_contents_csv, check_tokents_for_dialog
-from questionnaire import load_question, get_character_set, find_matched_character
+from questionnaire import load_question, get_character_set, get_character_by_percent, find_matched_character
 
 NUM_WORKERS = 10
 
@@ -144,7 +144,8 @@ def handle_received_date(received_data):
 
     try:
         integer_value = int(message)
-        message = get_character_set(question_data, message)
+        # message = get_character_set(question_data, message)
+        message = get_character_by_percent(question_data, message)
     except ValueError:
         pass
 

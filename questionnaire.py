@@ -54,6 +54,38 @@ def get_character_set(json_data, number_str):
                 result_str += '\n'
     return result_str
 
+def get_character_by_percent(json_data, number_str):
+    # print(number_str)
+    # print(type(number_str))
+    result_dict = {}
+    result_str = ''
+    tot_num = 0
+    for i, n_str in enumerate(number_str):
+        if i >= 8:
+            break
+        try:
+            if int(n_str) > 5 or int(n_str) < 1:
+                n_str = '1'
+        except ValueError:
+            n_str = '1'
+        question = json_data[str(i)]['question']
+        char_list = json_data[str(i)][n_str][1]
+
+        for ci, c in enumerate(char_list):
+            if c in result_dict:
+                result_dict[c] += 1
+            else:
+                result_dict[c] = 0
+            tot_num += 1
+
+    # 사이보그(50%), 영웅(10%), ...
+    for k, v in result_dict:
+        percent = int(v/tot_num*100)
+        result_str += (k + f'({percent}%), ')
+
+    result_str = result_str[:-2]
+    return result_str
+
 def find_matched_character(txt_from_gpt, english = True):
     selected = character_list[0]
     closest_idx = 1000
