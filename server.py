@@ -147,6 +147,7 @@ def handle_received_date(received_data):
         # message = get_character_set(question_data, message)
         message = get_character_by_percent(question_data, message)
     except ValueError:
+        # print('Input value is not integer:', message)
         pass
 
     # It should be removed after testing
@@ -158,7 +159,14 @@ def handle_received_date(received_data):
     
 async def receive_gpt_result(gpt_module):
     json_format = True
-    gpt_module.join()
+
+    # gpt_module.join()
+
+    # Use an async loop to check if the thread is alive
+    while gpt_module.is_alive():
+        await asyncio.sleep(0.1)  # Sleep for a short duration before checking again
+    
+
     start_time, end_time, elapsed_time_sec = gpt_module.get_elapsed_time()
     return_val = None
     if json_format:

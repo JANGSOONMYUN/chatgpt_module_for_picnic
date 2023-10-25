@@ -15,6 +15,7 @@ from handle_contents import load_contents, load_contents_csv
 class GPTModule(threading.Thread):
     def __init__(self, api_key_path = './config.json', character_id = "default", tokenizer = None, keep_dialog = None, warmed_up_dialog = None, warmup_mode = False) -> None:
         threading.Thread.__init__(self)
+        self.is_running = False
 
         self.model = 'gpt-3.5-turbo-16k'
 
@@ -68,6 +69,9 @@ class GPTModule(threading.Thread):
         self.warmed_up_dialog = warmed_up_dialog
         if warmup_mode:
             self.dialog_contains_pre_post_text = True
+    
+    def is_alive(self):
+        return self.is_running
             
     # def set_keep_dialog_option(self, option = True):
     #     self.keep_dialog = option
@@ -369,6 +373,7 @@ class GPTModule(threading.Thread):
 
     # Threading for conversation
     def run(self):
+        self.is_running = True
         self.start_time = None
         self.end_time = None
         # Test
@@ -384,7 +389,9 @@ class GPTModule(threading.Thread):
         self.answer_text, _ = self.chat_completion(speaker_character, self.pack_string_to_msg_list(self.user_text), contents = cont)
         if self.answer_text is None:
             self.answer_text = '다시 입력해 주세요.'
+        
 
+        self.is_running = False
 
 # test
 if __name__ == "__main__":
