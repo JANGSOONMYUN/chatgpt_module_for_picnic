@@ -1,4 +1,5 @@
 import json
+import re
 character_list = [
     ["영웅", "HERO"],
     ["반딧불이", "FIREFLY"],
@@ -87,6 +88,15 @@ def get_character_by_percent(json_data, number_str):
     result_str = result_str[:-2]
     return result_str
 
+def remove_percent_str(message):
+    if '%' in message:
+        # Use regular expression to remove any percentage string
+        message = re.sub(r'\(\d+%\)','', message)
+        message = re.sub(r'\[\d+%\]','', message)
+        message = message.replace('  ', ' ')
+    return message
+
+
 def find_matched_character(txt_from_gpt, english = True):
     selected = character_list[0]
     closest_idx = 1000
@@ -128,3 +138,9 @@ def find_matched_character(txt_from_gpt, english = True):
         return selected[1]
     else:
         return selected[0]
+
+
+if __name__ == "__main__":
+    input_string = "This is a sample string with [12%] inside. (12%)"
+    result = remove_percent_str(input_string)
+    print(result)

@@ -385,8 +385,26 @@ class GPTModule(threading.Thread):
 
         cont = load_contents_csv(self.contents_path)
 
-        # question = 'Hi, who are you?'
-        self.answer_text, _ = self.chat_completion(speaker_character, self.pack_string_to_msg_list(self.user_text), contents = cont)
+        # handle exceptions
+        max_retries = 10
+        retry_delay = 5  # seconds
+        retry_count = 0
+        result = None
+        while retry_count < max_retries:
+            try:
+                result, _ = self.chat_completion(speaker_character, self.pack_string_to_msg_list(self.user_text), contents = cont)
+            except Exception as e:
+                print(f"An exception occurred: {e}")
+                result = None
+            
+            if result is not None:
+                break
+            retry_count += 1
+            if retry_count < max_retries:
+                print(f"Retrying in {retry_delay} seconds...")
+                time.sleep(retry_delay)
+
+        self.answer_text = result
         if self.answer_text is None:
             self.answer_text = '다시 입력해 주세요.'
         

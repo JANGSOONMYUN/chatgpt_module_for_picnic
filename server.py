@@ -15,7 +15,7 @@ from get_character import get_character, num_character, get_character_ids
 from gpt_module import GPTModule
 from transformers import GPT2Tokenizer
 from handle_contents import load_contents_csv, check_tokents_for_dialog
-from questionnaire import load_question, get_character_set, get_character_by_percent, find_matched_character
+from questionnaire import load_question, get_character_set, get_character_by_percent, find_matched_character, remove_percent_str
 
 NUM_WORKERS = 10
 
@@ -65,6 +65,9 @@ def pack_str_to_json(text, id, end_time = '0:0:0', start_time = '0:0:0', elapsed
             “elapsed_time”: “13.28”
     }
     '''
+
+    text = remove_percent_str(text)
+
     json_data = {
         "id": id,
         "text": text,
