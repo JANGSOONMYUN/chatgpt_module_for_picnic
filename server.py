@@ -10,6 +10,7 @@ import asyncio
 import websockets
 from asyncio import Queue
 
+from log.err_log import err_log
 from get_config import get_ip_port, close_server_option
 from get_character import get_character, num_character, get_character_ids
 from gpt_module import GPTModule
@@ -17,7 +18,8 @@ from transformers import GPT2Tokenizer
 from handle_contents import load_contents_csv, check_tokents_for_dialog
 from questionnaire import load_question, get_character_set, get_character_by_percent, find_matched_character, remove_percent_str
 
-NUM_WORKERS = 10
+NUM_WORKERS = 5
+
 
 question_data = load_question()
 
@@ -33,6 +35,15 @@ api_key_paths = []
 gpt_modules = {}
 keep_dialog = {}
 warmed_up_dialog = {}
+
+def print_remaining_workers():
+    wks = []
+    for k, v in gpt_modules.items():
+        wks.append(k)
+    print('Remainings:', wks)
+
+async def disconnect_callback():
+    print_remaining_workers()
 
 def check_time():
     # Get the current time
@@ -161,6 +172,7 @@ def handle_received_date(received_data):
     return message
     
 async def receive_gpt_result(gpt_module):
+    print_remaining_workers()
     json_format = True
 
     # gpt_module.join()
@@ -181,21 +193,32 @@ async def receive_gpt_result(gpt_module):
 
     return return_val
 
+async def delete_callback(work_id):
+    print("WebSocket connection closed!")
+
+
 async def worker(task_queue):
     while True:
-        websocket, work_id = await task_queue.get()
-        result = await receive_gpt_result(gpt_modules[work_id])
-        # gpt_modules[work_id] = None
+        try:
+            websocket, work_id = await task_queue.get()
+            result = await receive_gpt_result(gpt_modules[work_id])
+            # gpt_modules[work_id] = None
+            
+            await websocket.send(result)
+            task_queue.task_done()
+        except websockets.exceptions.ConnectionClosed:
+            print(f'Current connection has been closed. Worker: {work_id}')
+            err_log(f'Current connection has been closed. Worker: {work_id}', './log/server_log.txt')
 
-        # Delete memory
-        del gpt_modules[work_id]
-        if work_id in keep_dialog:
-            del keep_dialog[work_id]
-        if work_id in warmed_up_dialog:
-            del warmed_up_dialog[work_id]
+        finally:
+            # Delete memory
+            if work_id in gpt_modules:
+                del gpt_modules[work_id]
+            if work_id in keep_dialog:
+                del keep_dialog[work_id]
+            if work_id in warmed_up_dialog:
+                del warmed_up_dialog[work_id]
 
-        await websocket.send(result)
-        task_queue.task_done()
 
 connection_id = 0
 # ws://127.0.0.1:12009/websocket
@@ -240,8 +263,10 @@ async def echo(task_queue, websocket, path):
             
     except websockets.exceptions.ConnectionClosedError:
         print("Client disconnected")
+        print_remaining_workers()
     except Exception as ex:
         print('Unexpected error occurred.', str(ex))
+        err_log(f'Unexpected error occurred: {str(ex)}', './log/server_log.txt')
     finally:
         connected_clients -= 1
         if connected_clients == 0:

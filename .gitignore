@@ -7,6 +7,10 @@ dialog_data.json
 *.csv
 *.json
 *.jsonl
-
+gpt_log.txt
+server_log.txt
+gpt_module.log
 
 !questionnaire.json
+!character_setting(example).json
+!config(example).json

@@ -8,9 +8,10 @@ from datetime import datetime
 
 import openai
 from transformers import GPT2Tokenizer
-from get_config import get_api_key
+from get_config import get_api_key, get_organization_key
 from get_character import get_character
 from handle_contents import load_contents, load_contents_csv
+from log.err_log import err_log
 
 class GPTModule(threading.Thread):
     def __init__(self, api_key_path = './config.json', character_id = "default", tokenizer = None, keep_dialog = None, warmed_up_dialog = None, warmup_mode = False) -> None:
@@ -28,8 +29,11 @@ class GPTModule(threading.Thread):
         self.character_setting = get_character('character_setting.json', character_id)
         
         api_key_name = self.character_setting['api_key_name']
-        # FIXME:organization value should be hidden
-        openai.organization = "org-gaGQVteJIdlGWsTGxCxzutUC"
+        try:
+            openai.organization = get_organization_key(api_key_path)
+        except Exception as e:
+            print('[ERR] Please check if organization value exists in the config.json file.')
+            
         openai.api_key = get_api_key(api_key_path, key_name = api_key_name)
 
         self.contents_path = self.character_setting['contents_path']
@@ -386,8 +390,8 @@ class GPTModule(threading.Thread):
         cont = load_contents_csv(self.contents_path)
 
         # handle exceptions
-        max_retries = 10
-        retry_delay = 5  # seconds
+        max_retries = 30
+        retry_delay = 2  # seconds
         retry_count = 0
         result = None
         while retry_count < max_retries:
@@ -395,6 +399,7 @@ class GPTModule(threading.Thread):
                 result, _ = self.chat_completion(speaker_character, self.pack_string_to_msg_list(self.user_text), contents = cont)
             except Exception as e:
                 print(f"An exception occurred: {e}")
+                err_log(f"An exception occurred: {e}", './log/gpt_log.txt')
                 result = None
             
             if result is not None:
@@ -402,7 +407,11 @@ class GPTModule(threading.Thread):
             retry_count += 1
             if retry_count < max_retries:
                 print(f"Retrying in {retry_delay} seconds...")
+                err_log(f"Retrying in {retry_delay} seconds...", './log/gpt_log.txt')
                 time.sleep(retry_delay)
+            if retry_count == max_retries:
+                err_log('Re-trying calling GPT has been failed.', './log/gpt_log.txt')
+
 
         self.answer_text = result
         if self.answer_text is None:

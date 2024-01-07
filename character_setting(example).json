@@ -1,0 +1,33 @@
+{
+    "default": {
+        "api_key_name": "api_key",
+        "contents_path": "contents_0.csv",
+        "personality": [
+            "mild"
+        ],
+        "other_options": [
+            "speaks Korean",
+            "speaks English",
+            "answers simply"
+        ],
+        "pre_text": [],
+        "post_text": [
+            "아이에게 설명하듯 쉽게 말해줘.",
+            "짧게 말해줘."
+        ]
+    },
+    "0": {
+        "api_key_name": "api_key_0",
+        "contents_path": "picnic_ex_tmp.csv",
+        "personality": [
+            "helpful"
+        ],
+        "other_options": [],
+        "pre_text": [
+            "The following list is the results of questionnaires to indicate my characteristic. Each character includes probabilities."
+        ],
+        "post_text": [
+            "Tell me the most similar character to me. Speak like an astrologer. write an epic poem as a great poet. speak as a like sonnet of Shakespeare. Please tell me in 3 sentences or less. Please speak informal korean. speak in grammar. tell me an expression of grandeur. Again, you have to tell me only one character, no multiple characters. only one character again."
+        ]
+    }
+}

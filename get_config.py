@@ -9,6 +9,12 @@ def get_api_key(json_path, key_name = 'api_key'):
 
     return data[key_name]
 
+def get_organization_key(json_path):
+    # Load the JSON data from the file
+    with open(json_path, 'r') as file:
+        data = json.load(file)
+    return data['organization']
+
 def get_ip_port(json_path):
     # Load the JSON data from the file
     with open(json_path, 'r') as file:

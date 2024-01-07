@@ -1,27 +1,31 @@
 import json
 import re
 character_list = [
-    ["영웅", "HERO"],
-    ["반딧불이", "FIREFLY"],
-    ["전설", "LEGEND"],
-    ["마법사", "WIZARD"],
-    ["친구", "FRIEND"],
-    ["사이보그", "CYBORG"],
-    ["주인공", "PROTAGONIST"],
-    ["수호자", "GUARDIAN"],
-    ["관찰자", "OBSERVER"],
-    ["명인", "MASTER"],
-    ["이웃", "NEIGHBOR"],
-    ["웃는 사람", "LAUGHER"],
-    ["춤추는 사람", "DANCER"],
-    ["노래하는 사람", "SINGER"],
-    ["꿈꾸는 사람", "DREAMER"],
-    ["생각하는 사람", "THINKER"],
-    ["모험가", "ADVENTURER"],
-    ["이상가", "IDEALIST"],
-    ["투사", "CHAMPION"],
-    ["귀여운 사람", "CUTIE"]
+    ["영웅", "HERO", 0.8],  # 영웅의 비중이 크기 때문에 줄인다.
+    ["반딧불이", "FIREFLY", 1],
+    ["전설", "LEGEND", 1],
+    ["마법사", "WIZARD", 1],
+    ["친구", "FRIEND", 1],
+    ["사이보그", "CYBORG", 1],
+    ["주인공", "PROTAGONIST", 1],
+    ["수호자", "GUARDIAN", 1],
+    ["관찰자", "OBSERVER", 1],
+    ["명인", "MASTER", 1],
+    ["이웃", "NEIGHBOR", 1],  # 이웃은 총 5개 뿐이므로 8/5 를 곱해준다. 다른 항목들은 다 8개
+    ["웃는 사람", "LAUGHER", 1],
+    ["춤추는 사람", "DANCER", 1],
+    ["노래하는 사람", "SINGER", 1],
+    ["꿈꾸는 사람", "DREAMER", 1],
+    ["생각하는 사람", "THINKER", 1],
+    ["모험가", "ADVENTURER", 1],
+    ["이상가", "IDEALIST", 1],
+    ["투사", "CHAMPION", 1],
+    ["귀여운 사람", "CUTIE", 1]
 ]
+
+character_dict = {}
+for c in character_list:
+    character_dict[c[0]] = c[-1]
 
 
 def load_question(json_path = 'questionnaire.json'):
@@ -82,6 +86,13 @@ def get_character_by_percent(json_data, number_str):
 
     # 사이보그(50%), 영웅(10%), ...
     for k, v in result_dict.items():
+        # 비율 조정
+        try:
+            if k in character_dict:
+                tmp_v = float(v * character_dict[k])
+                v = tmp_v
+        except:
+            pass
         percent = int(v/tot_num*100)
         result_str += (k + f'({percent}%), ')
 
@@ -98,7 +109,7 @@ def remove_percent_str(message):
 
 
 def find_matched_character(txt_from_gpt, english = True):
-    selected = character_list[0]
+    selected = character_list[6]
     closest_idx = 1000
     for i, c in enumerate(character_list):
         c_kr = c[0]

@@ -1,0 +1,7 @@
+{
+    "organization": "org-",
+    "api_key": "sk-",
+    "ip": "0.0.0.0",
+    "port": 12009,
+    "close_server_when_client_die": false
+}
